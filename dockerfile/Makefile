@@ -8,34 +8,34 @@ up:
 down:
 	docker-compose -f docker-compose.dev.yaml down
 frontend: 
-	docker exec -it compass-frontend-dev bash
+	docker exec -it prosthetic-frontend-dev bash
 
 backend: 
-	docker exec -it compass-backend-dev bash
+	docker exec -it prosthetic-backend-dev bash
 
 db:
-	docker exec -it compass-db-dev bash
+	docker exec -it prosthetic-db-dev bash
 
 superuser:
-	docker exec -it compass-backend-dev python manage.py createsuperuser
+	docker exec -it prosthetic-backend-dev python manage.py createsuperuser
 
 makemigrations:
-	docker exec -it compass-backend-dev  python manage.py makemigrations
+	docker exec -it prosthetic-backend-dev  python manage.py makemigrations
 
 showmigrations:
-	docker exec -it compass-backend-dev  python manage.py showmigrations
+	docker exec -it prosthetic-backend-dev  python manage.py showmigrations
 
 makemigrationsmerge:
-	docker exec -it compass-backend-dev  python manage.py makemigrations --merge
+	docker exec -it prosthetic-backend-dev  python manage.py makemigrations --merge
 
 migrate:
-	docker exec -it compass-backend-dev  python manage.py migrate
+	docker exec -it prosthetic-backend-dev  python manage.py migrate
 
 loaddata:
-	docker exec -it compass-backend-dev python manage.py loaddata fixtures/$(f).json
+	docker exec -it prosthetic-backend-dev python manage.py loaddata fixtures/$(f).json
 
 dumpdata: 
-	docker exec -it compass-backend-dev python manage.py dumpdata $(f) --output=fixtures/$(f).json
+	docker exec -it prosthetic-backend-dev python manage.py dumpdata $(f) --output=fixtures/$(f).json
 
 
 
@@ -50,25 +50,25 @@ prod-up:
 prod-down:
 	docker-compose -f docker-compose.production.yaml down
 prod-frontend: 
-	docker exec -it compass-frontend-production bash
+	docker exec -it prosthetic-frontend-production bash
 
 prod-backend: 
-	docker exec -it compass-backend-production bash
+	docker exec -it prosthetic-backend-production bash
 
 prod-db:
-	docker exec -it compass-db-production bash
+	docker exec -it prosthetic-db-production bash
 
 prod-superuser:
-	docker exec -it compass-backend-production python manage.py createsuperuser
+	docker exec -it prosthetic-backend-production python manage.py createsuperuser
 
 prod-makemigrations:
-	docker exec -it compass-backend-production  python manage.py makemigrations
+	docker exec -it prosthetic-backend-production  python manage.py makemigrations
 
 prod-showmigrations:
-	docker exec -it compass-backend-production  python manage.py showmigrations
+	docker exec -it prosthetic-backend-production  python manage.py showmigrations
 
 prod-makemigrationsmerge:
-	docker exec -it compass-backend-production  python manage.py makemigrations --merge
+	docker exec -it prosthetic-backend-production  python manage.py makemigrations --merge
 
 prod-migrate:
-	docker exec -it compass-backend-production  python manage.py migrate
+	docker exec -it prosthetic-backend-production  python manage.py migrate
