@@ -29,6 +29,7 @@ cloudinary = "^1.44.0"
 requests = "^2.32.3"
 django-extensions = "^4.1"
 django-jazzmin = "^3.0.1"
+werkzeug = "^3.1.5"
 
 
 [tool.poetry.group.dev.dependencies]
