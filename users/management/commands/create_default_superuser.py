@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
-from core.settings.base import DEFAULT_SUPERUSER_USERNAME, DEFAULT_SUPERUSER_PASSWORD
+from core.settings import DEFAULT_SUPERUSER_USERNAME, DEFAULT_SUPERUSER_PASSWORD
 User = get_user_model()
 
 

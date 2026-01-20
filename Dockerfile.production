@@ -49,11 +49,11 @@ CMD ["/bin/sh", "-c", "/backend/build.sh"]
 
 # To Build
 
-# docker build -t hellotrekers-backend-prod-image -f Dockerfile.production .
+# docker build -t prosthetics-backend-prod-image -f Dockerfile.production .
 
 # To Run
-# docker run -it --rm -e DJANGO_ENV=production  -p 8081:8081  --name hellotrekers-backend-prod   hellotrekers-backend-prod-image
+# docker run -it --rm -e DJANGO_ENV=production  -p 8081:8081  --name prosthetics-backend-prod   prosthetics-backend-prod-image
 
 
 # From env file
-# docker run -it --rm --env-file .env  -p 8081:8081  --name hellotrekers-backend-prod  hellotrekers-backend-prod-image
+# docker run -it --rm --env-file .env  -p 8081:8081  --name prosthetics-backend-prod  prosthetics-backend-prod-image
