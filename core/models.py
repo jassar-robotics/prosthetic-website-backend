@@ -16,7 +16,7 @@ class BaseModel(DateModel):
 
 
 class BaseSlugModel(BaseModel):
-    slug = models.SlugField(unique=True, null=False, blank=False)
+    slug = models.SlugField(unique=True, null=False, blank=False, help_text="The unique URL identifier for this component. Changing this after the profile is public will break existing links.")
 
     class Meta:
         abstract = True

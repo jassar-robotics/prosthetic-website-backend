@@ -100,6 +100,7 @@ INSTALLED_APPS = [
     "contacts",
     "projects",
     "components",
+    "contributors",
 ]
 
 # --------------------------------------------------
@@ -280,7 +281,7 @@ JAZZMIN_SETTINGS = {
 
     "collapse_apps": True,
     "related_modal_active": True,
-    "order_with_respect_to": ["projects", "components", "contacts", "users", "groups"],
+    "order_with_respect_to": ["projects", "components", "contributors", "contacts", "users", "groups"],
 
 
     "collapse_apps_initially": [
@@ -299,7 +300,11 @@ JAZZMIN_SETTINGS = {
 
 
         "projects.Project": "fas fa-project-diagram",
+        "projects.Statusboard": "fas fa-clipboard-list",
         "components.Component": "fas fa-puzzle-piece",
+
+
+        "contributors.Contributor": "fas fa-hands-helping",
 
      
     },

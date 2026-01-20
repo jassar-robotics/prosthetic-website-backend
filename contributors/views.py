@@ -5,13 +5,12 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from core.permissions import AllowAnyAPIView
-from projects.models import Project
-from projects.serializer import (ProjectSerializer)
+from contributors.models import  Contributor
+from contributors.serializer import ( ContributorSerializer)
 
-
-class ProjectViewSet(ModelViewSet):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
+class ContributorViewSet(ModelViewSet):
+    queryset = Contributor.objects.all()
+    serializer_class = ContributorSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_update(self, serializer):
@@ -20,31 +19,31 @@ class ProjectViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         return Response(
-            {"message": "Project created successfully!", "data": response.data},
+            {"message": "Contributor created successfully!", "data": response.data},
             status=status.HTTP_201_CREATED,
         )
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, *args, **kwargs)
         return Response(
-            {"message": "Project updated successfully!", "data": response.data},
+            {"message": "Contributor updated successfully!", "data": response.data},
             status=status.HTTP_200_OK,
         )
 
     def destroy(self, request, *args, **kwargs):
         super().destroy(request, *args, **kwargs)
         return Response(
-            {"message": "Project deleted successfully!"}, status=status.HTTP_204_NO_CONTENT
+            {"message": "Contributor deleted successfully!"}, status=status.HTTP_204_NO_CONTENT
         )
 
-class ProjectDetailView(AllowAnyAPIView):
-    def get(self, _, project_slug):
+class ContributorDetailView(AllowAnyAPIView):
+    def get(self, _, contributor_slug):
         try:
-            project = Project.shown.get(slug=project_slug)
-        except Project.DoesNotExist:
+            contributor = Contributor.shown.get(slug=contributor_slug)
+        except Contributor.DoesNotExist:
             return Response(
-                {"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND
+                {"error": "Contributor not found."}, status=status.HTTP_404_NOT_FOUND
             )
-        serializer = ProjectSerializer(project)
+        serializer = ContributorSerializer(contributor)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

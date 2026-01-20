@@ -43,6 +43,11 @@ urlpatterns = [
     path("api/", include("contacts.urls")),
     path("api/", include("projects.urls")),
     path("api/", include("components.urls")),
+    path("api/", include("contributors.urls")),
+
+
+
+    
 ]
 
 if settings.DEBUG:

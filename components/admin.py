@@ -11,18 +11,27 @@ class ComponentNameMixin:
 
 
 
-
 class ComponentAdmin(ComponentNameMixin, DeleteLinkMixin, admin.ModelAdmin):
     form = ComponentAdminForm
-    list_display = ("name",)
+    
+    list_display = ("name", "type", "part_no", "version")
+    list_filter = ("type",)
+    search_fields = ("name", "part_no")
     prepopulated_fields = {"slug": ("name",)}
 
-
+ 
     fieldsets = (
-        ("Basic Info", {
-            "fields": (
-                "name", "slug", "image",  "type", "description",
-            )
+        ("Identification", {
+            "fields": ("name", "slug", "part_no", "version", "type"),
+            "description": "Basic tracking information for the component inventory."
+        }),
+        ("Content & Specifications", {
+            "fields": ("description", "specs", "image"),
+            "description": "Visual and technical details used for the project documentation."
+        }),
+        ("External Resources & Files", {
+            "fields": ("resource_url", "cad_file"),
+            "description": "Links and downloadable assets for engineering and manufacturing."
         }),
     )
 

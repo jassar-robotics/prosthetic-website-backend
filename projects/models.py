@@ -1,9 +1,9 @@
-from cloudinary.uploader import destroy, upload
+# from cloudinary.uploader import destroy, upload
 from django.db import models
 from tinymce.models import HTMLField
 
 
-from core.mixins import (CloudinaryImageProcessingMixin)
+from core.mixins import HomeImageProcessingMixin
 from core.models import  BaseSlugModel
 from projects.manager import AllManager, NonHiddenManager, HiddenManager
 from components.models import Component
@@ -13,7 +13,7 @@ from components.models import Component
 
 
 
-class Project(BaseSlugModel, CloudinaryImageProcessingMixin):
+class Project(BaseSlugModel, HomeImageProcessingMixin):
     # Choice Definitions
     class HandChoices(models.TextChoices):
         LEFT = 'LEFT', 'Left'
@@ -25,7 +25,7 @@ class Project(BaseSlugModel, CloudinaryImageProcessingMixin):
         FINAL = 'FINAL', 'Final'
 
     # Basic Info
-    name = models.CharField(max_length=50) # Updated to 50 as requested
+    name = models.CharField(max_length=50)
     image = models.ImageField(upload_to='projects/images/', blank=True, null=True)
     which_hand = models.CharField(max_length=10, choices=HandChoices.choices, default=HandChoices.RIGHT)
     circuit_diagram = models.FileField(upload_to='projects/circuits/', blank=True, null=True) # .sch
@@ -40,7 +40,7 @@ class Project(BaseSlugModel, CloudinaryImageProcessingMixin):
     description = HTMLField()
 
     # Relations & Visibility
-    stories = models.ManyToManyField('Stories', blank=True)
+    # stories = models.ManyToManyField('Stories', blank=True)
     is_hidden = models.BooleanField(default=False)
 
     # Contributor URLs
@@ -56,11 +56,13 @@ class Project(BaseSlugModel, CloudinaryImageProcessingMixin):
 
     # Existing components and managers
     components = models.ManyToManyField(
-        "Component",
+        "components.Component",
         through="ComponentQuantityPerProject",
         related_name="projects",
         blank=True
     )
+
+
     objects = AllManager()
     shown = NonHiddenManager()
     hidden = HiddenManager()
@@ -71,13 +73,13 @@ class Project(BaseSlugModel, CloudinaryImageProcessingMixin):
     def __str__(self):
         return f"{self.id}: {self.name}"
 
-    def delete(self, *args, **kwargs):
-        if self.image:
-            try:
-                destroy(self.image.public_id)
-            except:
-                pass 
-        super().delete(*args, **kwargs)
+    # def delete(self, *args, **kwargs):
+    #     if self.image:
+    #         try:
+    #             destroy(self.image.public_id)
+    #         except:
+    #             pass 
+    #     super().delete(*args, **kwargs)
 
 
 
@@ -112,3 +114,38 @@ class ComponentQuantityPerProject(models.Model):
 
 
 
+
+
+
+
+class Statusboard(BaseSlugModel, HomeImageProcessingMixin):
+    class StatusChoices(models.TextChoices):
+        TODO = 'TODO', 'To Do'
+        ONGOING = 'ONGOING', 'Ongoing'
+        TESTING = 'TESTING', 'Testing'
+        REVIEW = 'REVIEW', 'Review'
+        ACCEPTED = 'ACCEPTED', 'Accepted'
+
+    # New Fields
+    projects = models.ManyToManyField(
+        'projects.Project', 
+        related_name='statusboards',
+    )
+    heading = models.CharField(max_length=100)
+    description = models.TextField(max_length=1000)
+    status = models.CharField(
+        max_length=20, 
+        choices=StatusChoices.choices, 
+        default=StatusChoices.TODO
+    )
+
+    objects = AllManager()
+    shown = NonHiddenManager()
+    hidden = HiddenManager()
+
+    class Meta:
+        db_table = "statusboards"
+
+    def __str__(self):
+        return f"{self.heading} - {self.status}"
+    

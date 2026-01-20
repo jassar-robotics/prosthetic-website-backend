@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from projects.models import (
+from components.models import (
     Component
 )
 
