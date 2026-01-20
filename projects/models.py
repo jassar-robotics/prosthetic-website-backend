@@ -11,13 +11,52 @@ from components.models import Component
 
 
 
+
+
 class Project(BaseSlugModel, CloudinaryImageProcessingMixin):
-    name = models.CharField(max_length=200)
+    # Choice Definitions
+    class HandChoices(models.TextChoices):
+        LEFT = 'LEFT', 'Left'
+        RIGHT = 'RIGHT', 'Right'
+
+    class StatusChoices(models.TextChoices):
+        UPCOMING = 'UPCOMING', 'Upcoming'
+        ONGOING = 'ONGOING', 'Ongoing'
+        FINAL = 'FINAL', 'Final'
+
+    # Basic Info
+    name = models.CharField(max_length=50) # Updated to 50 as requested
+    image = models.ImageField(upload_to='projects/images/', blank=True, null=True)
+    which_hand = models.CharField(max_length=10, choices=HandChoices.choices, default=HandChoices.RIGHT)
+    circuit_diagram = models.FileField(upload_to='projects/circuits/', blank=True, null=True) # .sch
+    manuals = models.FileField(upload_to='projects/manuals/', blank=True, null=True) # .pdf
+    video_url = models.URLField(blank=True, null=True)
+
+    # Meta & Description
+    software_github_link = models.URLField(blank=True, null=True)
+    video_description_link = models.URLField(blank=True, null=True)
+    status = models.CharField(max_length=15, choices=StatusChoices.choices, default=StatusChoices.UPCOMING)
+    version = models.CharField(max_length=20, blank=True)
     description = HTMLField()
 
+    # Relations & Visibility
+    stories = models.ManyToManyField('Stories', blank=True)
+    is_hidden = models.BooleanField(default=False)
 
+    # Contributor URLs
+    mechanical_github_repo_folder = models.URLField(blank=True, null=True)
+    electrical_github_repo = models.URLField(blank=True, null=True)
+    software_github_repo = models.URLField(blank=True, null=True)
+    vision = HTMLField(blank=True, null=True)
+
+    # Contributor Files
+    readme_mechanical = models.FileField(upload_to='projects/readmes/', blank=True, null=True)
+    readme_electrical = models.FileField(upload_to='projects/readmes/', blank=True, null=True)
+    readme_software = models.FileField(upload_to='projects/readmes/', blank=True, null=True)
+
+    # Existing components and managers
     components = models.ManyToManyField(
-        Component,
+        "Component",
         through="ComponentQuantityPerProject",
         related_name="projects",
         blank=True
@@ -34,9 +73,18 @@ class Project(BaseSlugModel, CloudinaryImageProcessingMixin):
 
     def delete(self, *args, **kwargs):
         if self.image:
-            destroy(self.image.public_id)
+            try:
+                destroy(self.image.public_id)
+            except:
+                pass 
         super().delete(*args, **kwargs)
 
+
+
+
+
+
+        
 
 class ComponentQuantityPerProject(models.Model):
     project = models.ForeignKey(
