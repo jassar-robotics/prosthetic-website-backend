@@ -34,11 +34,6 @@ DEFAULT_SUPERUSER_PASSWORD = env("DEFAULT_SUPERUSER_PASSWORD")
 DEBUG = env.bool("DEBUG")
 SECRET_KEY = env("SECRET_KEY")
 
-
-
-print("--------------------------------------------------")
-print(DEBUG)
-print("--------------------------------------------------")
 # --------------------------------------------------
 # Environment-based security
 # --------------------------------------------------
@@ -52,11 +47,9 @@ if DEBUG:
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
-else:
 
-    print("-------------------------------------------------- From Production")
-    print(DEBUG)
-    print("--------------------------------------------------")
+
+else:
     ALLOWED_HOSTS = [
         host.strip()
         for host in env("ALLOWED_HOSTS").split(",")
