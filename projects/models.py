@@ -100,7 +100,7 @@ class Story(BaseModel):
     country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='US')
     story_content = HTMLField()
     is_accepted = models.BooleanField(default=False)
-    projects = models.ManyToManyField('Project', related_name='project_stories')
+    project = models.ForeignKey('Project', related_name='stories', on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         db_table = "stories"
@@ -115,13 +115,7 @@ class Story(BaseModel):
 class UseCase(BaseModel):
     heading = models.CharField(max_length=50)
     description = HTMLField()
-    
-    # Relationships
-    projects = models.ManyToManyField(
-        'Project', 
-        related_name='use_cases'
-    )
-
+    project = models.ForeignKey('Project', related_name='usecases', on_delete=models.CASCADE, null=True, blank=True)
     class Meta:
         db_table = "use_cases"
         verbose_name = "Use Case"
@@ -133,11 +127,7 @@ class UseCase(BaseModel):
 
 
 class Stage(BaseModel):
-    project = models.ForeignKey(
-        'Project', 
-        related_name="stages", 
-        on_delete=models.CASCADE
-    )
+    project = models.ForeignKey('Project', related_name='stages', on_delete=models.CASCADE, null=True, blank=True)
     stage_no = models.IntegerField()
     heading = models.CharField(max_length=100)
     description = HTMLField()
@@ -196,11 +186,7 @@ class Statusboard(BaseSlugModel, HomeImageProcessingMixin):
         REVIEW = 'REVIEW', 'Review'
         ACCEPTED = 'ACCEPTED', 'Accepted'
 
-    # New Fields
-    projects = models.ManyToManyField(
-        'projects.Project', 
-        related_name='statusboards',
-    )
+    project = models.ForeignKey('Project', related_name='statusboard', on_delete=models.CASCADE, null=True, blank=True)
     heading = models.CharField(max_length=100)
     description = models.TextField(max_length=1000)
     status = models.CharField(

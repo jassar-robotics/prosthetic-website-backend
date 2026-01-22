@@ -8,10 +8,31 @@ from projects.models import (Project, Statusboard, Story, UseCase, Stage )
 
 
 
-class StageInline(admin.TabularInline):
+class StoryInline(admin.StackedInline):
+    model = Story
+    form = StoryAdminForm
+    extra = 1
+
+
+class UsecaseInline(admin.StackedInline):
+    model = UseCase
+    form = UseCaseAdminForm
+    extra = 1
+
+
+
+
+class StatusboardInline(admin.StackedInline):
+    model = Statusboard
+    form = StatusboardAdminForm
+    extra = 1
+
+
+class StageInline(admin.StackedInline):
     model = Stage
     form = StageAdminForm
     extra = 1
+
 
     
 class ProjectAdmin(DeleteLinkMixin, admin.ModelAdmin):
@@ -19,7 +40,7 @@ class ProjectAdmin(DeleteLinkMixin, admin.ModelAdmin):
     list_display = ("name", "status", "version", "is_hidden", "modified_at", "delete_link", )
     list_filter = ("status", "is_hidden", "which_hand")
     prepopulated_fields = {"slug": ("name",)}
-    inlines = [StageInline]
+    inlines = [StageInline, StoryInline, UsecaseInline, StatusboardInline]
 
  
     fieldsets = (
@@ -35,7 +56,7 @@ class ProjectAdmin(DeleteLinkMixin, admin.ModelAdmin):
             "fields": ("circuit_diagram", "manuals"),
             "description": "Primary engineering assets for users."
         }),
-        ("Contributor / Developer Resources", {
+        ("Contributors", {
             "classes": ("collapse",),
             "fields": (
                 "software_github_link", 
@@ -56,7 +77,6 @@ class StoryAdmin(DeleteLinkMixin, admin.ModelAdmin):
     list_display = ("name", "country", "is_accepted")
     list_filter = ("country", "is_accepted")
     search_fields = ("name", "story_content")
-    filter_horizontal = ("projects",)
 
     fieldsets = (
         ("Basic Identification", {
@@ -72,7 +92,6 @@ class UseCaseAdmin(admin.ModelAdmin):
     form = UseCaseAdminForm
     list_display = ("heading",)
     search_fields = ("heading", "description")
-    filter_horizontal = ("projects",)
 
     fieldsets = (
         ("General Information", {
@@ -88,10 +107,9 @@ class StatusboardAdmin(DeleteLinkMixin, admin.ModelAdmin):
     form = StatusboardAdminForm
     
     list_display = ("heading", "status", "modified_at")
-    list_filter = ("status", "projects")
+    list_filter = ("status",)
     search_fields = ("heading", "description")
     prepopulated_fields = {"slug": ("heading",)}
-    filter_horizontal = ("projects",)
 
     fieldsets = (
         ("Header Info", {
