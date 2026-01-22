@@ -49,5 +49,13 @@ class ProjectDetailView(AllowAnyAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-
-
+class ProjectListView(AllowAnyAPIView):
+    def get(self, _):
+        try:
+            project = Project.shown.all()
+        except Project.DoesNotExist:
+            return Response(
+                {"error": "Project not found."}, status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = ProjectSerializer(project)
+        return Response(serializer.data, status=status.HTTP_200_OK)

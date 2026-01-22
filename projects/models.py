@@ -4,7 +4,7 @@ from tinymce.models import HTMLField
 
 
 from core.mixins import HomeImageProcessingMixin
-from core.models import  BaseSlugModel
+from core.models import  BaseSlugModel, BaseModel
 from projects.manager import AllManager, NonHiddenManager, HiddenManager
 from components.models import Component
 
@@ -87,8 +87,78 @@ class Project(BaseSlugModel, HomeImageProcessingMixin):
 
 
         
+class Story(BaseModel):
+    COUNTRY_CHOICES = [
+        ('US', 'United States'),
+        ('UK', 'United Kingdom'),
+        ('NP', 'Nepal'),
+        ('DE', 'Germany'),
+        ('IN', 'India'),
+    ]
 
-class ComponentQuantityPerProject(models.Model):
+    name = models.CharField(max_length=50)
+    country = models.CharField(max_length=2, choices=COUNTRY_CHOICES, default='US')
+    story_content = HTMLField()
+    is_accepted = models.BooleanField(default=False)
+    projects = models.ManyToManyField('Project', related_name='project_stories')
+
+    class Meta:
+        db_table = "stories"
+        verbose_name_plural = "Stories"
+
+    def __str__(self):
+        return self.name
+
+
+
+
+class UseCase(BaseModel):
+    heading = models.CharField(max_length=50)
+    description = HTMLField()
+    
+    # Relationships
+    projects = models.ManyToManyField(
+        'Project', 
+        related_name='use_cases'
+    )
+
+    class Meta:
+        db_table = "use_cases"
+        verbose_name = "Use Case"
+        verbose_name_plural = "Use Cases"
+
+    def __str__(self):
+        return self.heading
+
+
+
+class Stage(BaseModel):
+    project = models.ForeignKey(
+        'Project', 
+        related_name="stages", 
+        on_delete=models.CASCADE
+    )
+    stage_no = models.IntegerField()
+    heading = models.CharField(max_length=100)
+    description = HTMLField()
+    image = models.ImageField(upload_to="stages/", null=True, blank=True)
+    
+    class Meta:
+        db_table = "stages"
+        ordering = ['project', 'stage_no']
+        # Ensures Project A cannot have two "Stage 1" entries
+        constraints = [
+            models.UniqueConstraint(fields=['project', 'stage_no'], name='unique_stage_per_project')
+        ]
+        verbose_name = "Project Stage"
+        verbose_name_plural = "Project Stages"
+
+    def __str__(self):
+        return f"{self.project.name} - Stage {self.stage_no}: {self.heading}"
+
+
+        
+class ComponentQuantityPerProject(BaseModel):
     project = models.ForeignKey(
         "projects.Project",
         on_delete=models.CASCADE,

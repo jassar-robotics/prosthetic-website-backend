@@ -3,7 +3,9 @@ from components.serializer import ComponentSerializer
 from projects.models import (
     Project,
     ComponentQuantityPerProject,
-    Statusboard
+    Statusboard, 
+    Story,
+    UseCase
 )
 
 
@@ -28,4 +30,18 @@ class ProjectSerializer(serializers.ModelSerializer):
 class StatusboardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Statusboard
+        fields = "__all__"
+
+
+class StorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Story
+        fields = "__all__"
+
+
+
+
+class UsecaseboardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UseCase
         fields = "__all__"

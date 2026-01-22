@@ -294,6 +294,10 @@ JAZZMIN_SETTINGS = {
 
         "projects.Project": "fas fa-project-diagram",
         "projects.Statusboard": "fas fa-clipboard-list",
+        "projects.Story": "fas fa-book-open",
+        "projects.UseCase": "fas fa-lightbulb",
+        "projects.Stage": "fas fa-layer-group",
+        
         "components.Component": "fas fa-puzzle-piece",
 
 

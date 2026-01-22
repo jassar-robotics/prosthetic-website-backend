@@ -3,7 +3,7 @@ from tinymce.widgets import TinyMCE
 
 from core.form import TINYMCE_BASIC_CONFIG
 from core.mixins import ImageSizeValidationMixin
-from projects.models import ( Project, Statusboard)
+from projects.models import ( Project, Statusboard, Story, UseCase, Stage)
 
 
 class ProjectAdminForm(ImageSizeValidationMixin, forms.ModelForm):
@@ -40,7 +40,47 @@ class ProjectAdminForm(ImageSizeValidationMixin, forms.ModelForm):
             }
 
 
+class StoryAdminForm(forms.ModelForm):
+    class Meta:
+        model = Story
+        fields = '__all__'
 
+        widgets = {
+            "content": TinyMCE(mce_attrs=TINYMCE_BASIC_CONFIG),
+        }
+        help_texts = {
+            'projects': 'Select the project(s) this story is associated with. Use Ctrl/Cmd to select multiple.',
+            'name': 'The title of the story or the name of the author.',
+            'country': 'Select the country where this story originated.',
+            'story_content': 'Write the full narrative here using the HTML editor.',
+            'is_accepted': 'Check this box to approve the story for public display.',
+        }
+
+class UseCaseAdminForm(forms.ModelForm):
+    class Meta:
+        model = UseCase
+        fields = '__all__'
+
+        widgets = {
+            "content": TinyMCE(mce_attrs=TINYMCE_BASIC_CONFIG),
+        }
+        help_texts = {
+            'heading': 'A short, punchy title for this use case (e.g., "Clinical Rehabilitation" or "Daily Tasks").',
+            'description': 'Provide a detailed explanation of how the project is applied in this specific scenario.',
+            'projects': 'Link this use case to one or more projects. Hold Ctrl/Cmd to select multiple.',
+        }
+
+class StageAdminForm(forms.ModelForm):
+    class Meta:
+        model = Stage
+        fields = '__all__'
+        help_texts = {
+            'project': 'Select the specific project this stage belongs to.',
+            'stage_no': 'The sequence number for this specific project (e.g., 1, 2, 3).',
+            'heading': 'Title for this phase (e.g., "Initial Prototype").',
+            'description': 'Detailed breakdown of milestones achieved in this stage.',
+            'image': 'Visual representation or photo of this project phase.',
+        }
 
 class StatusboardAdminForm(forms.ModelForm):
     class Meta:

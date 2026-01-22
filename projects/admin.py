@@ -1,33 +1,25 @@
 from django.contrib import admin
 
 from core.mixins import DeleteLinkMixin
-from projects.form import (ProjectAdminForm, StatusboardAdminForm)
-from projects.models import (Project, Statusboard )
-
-
-class ProjectNameMixin:
-    def get_PROSTHETICS(self, obj):
-        return obj.project.name if obj.project else "No Project Assigned"
-    get_PROSTHETICS.short_description = "Project"
+from projects.form import (ProjectAdminForm, StatusboardAdminForm, StoryAdminForm, UseCaseAdminForm, StageAdminForm)
+from projects.models import (Project, Statusboard, Story, UseCase, Stage )
 
 
 
 
 
-class StatusboardNameMixin:
-    def get_statusboard_name(self, obj):
-        return obj.statusboard.heading if obj.statusboard else "No Statusboard Assigned"
-    get_statusboard_name.short_description = "Statusboard"
+class StageInline(admin.TabularInline):
+    model = Stage
+    form = StageAdminForm
+    extra = 1
 
-
-
-
-
+    
 class ProjectAdmin(DeleteLinkMixin, admin.ModelAdmin):
     form = ProjectAdminForm
     list_display = ("name", "status", "version", "is_hidden", "modified_at", "delete_link", )
     list_filter = ("status", "is_hidden", "which_hand")
     prepopulated_fields = {"slug": ("name",)}
+    inlines = [StageInline]
 
  
     fieldsets = (
@@ -59,7 +51,40 @@ class ProjectAdmin(DeleteLinkMixin, admin.ModelAdmin):
     )
 
 
-class StatusboardAdmin(StatusboardNameMixin, DeleteLinkMixin, admin.ModelAdmin):
+class StoryAdmin(DeleteLinkMixin, admin.ModelAdmin):
+    form = StoryAdminForm
+    list_display = ("name", "country", "is_accepted")
+    list_filter = ("country", "is_accepted")
+    search_fields = ("name", "story_content")
+    filter_horizontal = ("projects",)
+
+    fieldsets = (
+        ("Basic Identification", {
+            "fields": ("name", "country", "is_accepted")
+        }),
+        ("The Narrative", {
+            "fields": ("story_content", "projects"),
+        }),
+    )
+
+
+class UseCaseAdmin(admin.ModelAdmin):
+    form = UseCaseAdminForm
+    list_display = ("heading",)
+    search_fields = ("heading", "description")
+    filter_horizontal = ("projects",)
+
+    fieldsets = (
+        ("General Information", {
+            "fields": ("heading", "description"),
+        }),
+        ("Associated Projects", {
+            "fields": ("projects",),
+            "description": "Select the projects that demonstrate this specific use case."
+        }),
+    )
+
+class StatusboardAdmin(DeleteLinkMixin, admin.ModelAdmin):
     form = StatusboardAdminForm
     
     list_display = ("heading", "status", "modified_at")
@@ -79,8 +104,17 @@ class StatusboardAdmin(StatusboardNameMixin, DeleteLinkMixin, admin.ModelAdmin):
         }),
     )
 
+
+
+class StageAdmin(admin.ModelAdmin):
+    form = StageAdminForm
+    list_display = ("project", "stage_no", "heading")
+    list_filter = ("project",)
+    search_fields = ("heading", "project__name")
+
+
+admin.site.register(Story, StoryAdmin)
+admin.site.register(Stage, StageAdmin)
+admin.site.register(UseCase, UseCaseAdmin)
 admin.site.register(Statusboard, StatusboardAdmin)
-
-
-
 admin.site.register(Project, ProjectAdmin)

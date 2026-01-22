@@ -5,12 +5,12 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from core.permissions import AllowAnyAPIView
-from projects.models import  Statusboard
-from projects.serializer import ( StatusboardSerializer)
+from projects.models import  Story
+from projects.serializer import ( StorySerializer)
 
-class StatusboardViewSet(ModelViewSet):
-    queryset = Statusboard.objects.all()
-    serializer_class = StatusboardSerializer
+class StoryViewSet(ModelViewSet):
+    queryset = Story.objects.all()
+    serializer_class = StorySerializer
     permission_classes = [IsAuthenticated]
 
     def perform_update(self, serializer):
@@ -19,19 +19,21 @@ class StatusboardViewSet(ModelViewSet):
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
         return Response(
-            {"message": "Statusboard created successfully!", "data": response.data},
+            {"message": "Story created successfully!", "data": response.data},
             status=status.HTTP_201_CREATED,
         )
 
     def update(self, request, *args, **kwargs):
         response = super().update(request, *args, **kwargs)
         return Response(
-            {"message": "Statusboard updated successfully!", "data": response.data},
+            {"message": "Story updated successfully!", "data": response.data},
             status=status.HTTP_200_OK,
         )
 
     def destroy(self, request, *args, **kwargs):
         super().destroy(request, *args, **kwargs)
         return Response(
-            {"message": "Statusboard deleted successfully!"}, status=status.HTTP_204_NO_CONTENT
+            {"message": "Story deleted successfully!"}, status=status.HTTP_204_NO_CONTENT
         )
+
+
