@@ -1,12 +1,18 @@
 from django.contrib import admin
 
 from core.mixins import DeleteLinkMixin
-from projects.form import (ProjectAdminForm, StatusboardAdminForm, StoryAdminForm, UseCaseAdminForm, StageAdminForm)
-from projects.models import (Project, Statusboard, Story, UseCase, Stage )
+from projects.form import (ComponentQuantityForm, ProjectAdminForm, StatusboardAdminForm, StoryAdminForm, UseCaseAdminForm, StageAdminForm,    ProjectImageAdminForm, StageImageAdminForm)
+from projects.models import (ComponentQuantityPerProject, Project, StageImage, Statusboard, Story, UseCase, Stage, ProjectImage)
 
 
 
-
+class ComponentQuantityInline(admin.TabularInline):
+    model = ComponentQuantityPerProject
+    form = ComponentQuantityForm
+    extra = 2
+    autocomplete_fields = ['component']
+    verbose_name = "Component"
+    verbose_name_plural = "Components"
 
 class StoryInline(admin.StackedInline):
     model = Story
@@ -33,6 +39,17 @@ class StageInline(admin.StackedInline):
     form = StageAdminForm
     extra = 1
 
+class ProjectImageInline(admin.StackedInline):
+    model = ProjectImage
+    form = ProjectImageAdminForm
+    extra = 1
+
+
+
+class StageImageInline(admin.StackedInline):
+    model = StageImage
+    form = StageImageAdminForm
+    extra = 2
 
     
 class ProjectAdmin(DeleteLinkMixin, admin.ModelAdmin):
@@ -40,7 +57,7 @@ class ProjectAdmin(DeleteLinkMixin, admin.ModelAdmin):
     list_display = ("name", "status", "version", "is_hidden", "modified_at", "delete_link", )
     list_filter = ("status", "is_hidden", "which_hand")
     prepopulated_fields = {"slug": ("name",)}
-    inlines = [StageInline, StoryInline, UsecaseInline, StatusboardInline]
+    inlines = [ComponentQuantityInline, ProjectImageInline, StageInline, StoryInline, UsecaseInline, StatusboardInline]
 
  
     fieldsets = (
@@ -72,12 +89,12 @@ class ProjectAdmin(DeleteLinkMixin, admin.ModelAdmin):
     )
 
 
+
 class StoryAdmin(DeleteLinkMixin, admin.ModelAdmin):
     form = StoryAdminForm
     list_display = ("name", "country", "is_accepted")
     list_filter = ("country", "is_accepted")
     search_fields = ("name", "story_content")
-
     fieldsets = (
         ("Basic Identification", {
             "fields": ("name", "country", "is_accepted")
@@ -129,6 +146,7 @@ class StageAdmin(admin.ModelAdmin):
     list_display = ("project", "stage_no", "heading")
     list_filter = ("project",)
     search_fields = ("heading", "project__name")
+    inlines = [StageImageInline]
 
 
 admin.site.register(Story, StoryAdmin)

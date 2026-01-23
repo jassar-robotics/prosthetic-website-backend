@@ -5,6 +5,6 @@ router = DefaultRouter()
 router.register(r"contributors", ContributorViewSet, basename="contributor")
 
 urlpatterns = [
-    path("contributors/detail/<slug:contributor_slug>/", ContributorDetailView.as_view(), name="get-contributors"),
-    path("", include(router.urls)),
+    # path("contributors/detail/<slug:contributor_slug>/", ContributorDetailView.as_view(), name="get-contributors"),
+    # path("", include(router.urls)),
 ]

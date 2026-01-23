@@ -274,7 +274,7 @@ JAZZMIN_SETTINGS = {
 
     "collapse_apps": True,
     "related_modal_active": True,
-    "order_with_respect_to": ["projects", "components", "contributors", "contacts", "users", "groups"],
+    "order_with_respect_to": ["projects","projects.Project", "components", "contributors", "contacts", "users", "groups"],
 
 
     "collapse_apps_initially": [

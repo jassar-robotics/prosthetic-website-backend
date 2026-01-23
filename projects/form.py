@@ -3,7 +3,7 @@ from tinymce.widgets import TinyMCE
 
 from core.form import TINYMCE_BASIC_CONFIG
 from core.mixins import ImageSizeValidationMixin
-from projects.models import ( Project, Statusboard, Story, UseCase, Stage)
+from projects.models import ( Project, StageImage, Statusboard, Story, UseCase, Stage, ProjectImage, ComponentQuantityPerProject)
 
 
 class ProjectAdminForm(ImageSizeValidationMixin, forms.ModelForm):
@@ -70,6 +70,20 @@ class UseCaseAdminForm(forms.ModelForm):
             'projects': 'Link this use case to one or more projects. Hold Ctrl/Cmd to select multiple.',
         }
 
+
+class ProjectImageAdminForm(forms.ModelForm):
+    class Meta:
+        model = ProjectImage
+        fields = '__all__'
+        help_texts = {
+            'project': 'The project this image belongs to.',
+            'image': 'Upload a gallery image. High resolution is recommended.',
+        }
+
+
+
+
+
 class StageAdminForm(forms.ModelForm):
     class Meta:
         model = Stage
@@ -81,6 +95,17 @@ class StageAdminForm(forms.ModelForm):
             'description': 'Detailed breakdown of milestones achieved in this stage.',
             'image': 'Visual representation or photo of this project phase.',
         }
+
+
+class StageImageAdminForm(forms.ModelForm):
+    class Meta:
+        model = StageImage
+        fields = '__all__'
+        help_texts = {
+            'stage': 'Select the project stage this image illustrates.',
+            'image': 'Upload a detailed photo for this stage (e.g., a close-up of a 3D print or circuit).',
+        }
+
 
 class StatusboardAdminForm(forms.ModelForm):
     class Meta:
@@ -96,3 +121,12 @@ class StatusboardAdminForm(forms.ModelForm):
                     'status': 'Select the current workflow stage for this task.',
                     'slug': 'URL-friendly identifier generated from the heading. Used for direct linking.',
                 }
+        
+class ComponentQuantityForm(forms.ModelForm):
+    class Meta:
+        model = ComponentQuantityPerProject
+        fields = '__all__'
+        help_texts = {
+            'component': 'Select the component/part needed for this project.',
+            'quantity': 'How many units of this component are required for a single build?',
+        }

@@ -14,7 +14,6 @@ from components.models import Component
 
 
 class Project(BaseSlugModel, HomeImageProcessingMixin):
-    # Choice Definitions
     class HandChoices(models.TextChoices):
         LEFT = 'LEFT', 'Left'
         RIGHT = 'RIGHT', 'Right'
@@ -24,7 +23,6 @@ class Project(BaseSlugModel, HomeImageProcessingMixin):
         ONGOING = 'ONGOING', 'Ongoing'
         FINAL = 'FINAL', 'Final'
 
-    # Basic Info
     name = models.CharField(max_length=50)
     image = models.ImageField(upload_to='projects/images/', blank=True, null=True)
     which_hand = models.CharField(max_length=10, choices=HandChoices.choices, default=HandChoices.RIGHT)
@@ -32,18 +30,16 @@ class Project(BaseSlugModel, HomeImageProcessingMixin):
     manuals = models.FileField(upload_to='projects/manuals/', blank=True, null=True) # .pdf
     video_url = models.URLField(blank=True, null=True)
 
-    # Meta & Description
     software_github_link = models.URLField(blank=True, null=True)
     video_description_link = models.URLField(blank=True, null=True)
     status = models.CharField(max_length=15, choices=StatusChoices.choices, default=StatusChoices.UPCOMING)
     version = models.CharField(max_length=20, blank=True)
     description = HTMLField()
 
-    # Relations & Visibility
-    # stories = models.ManyToManyField('Stories', blank=True)
     is_hidden = models.BooleanField(default=False)
 
-    # Contributor URLs
+
+
     mechanical_github_repo_folder = models.URLField(blank=True, null=True)
     electrical_github_repo = models.URLField(blank=True, null=True)
     software_github_repo = models.URLField(blank=True, null=True)
@@ -84,6 +80,22 @@ class Project(BaseSlugModel, HomeImageProcessingMixin):
 
 
 
+class ProjectImage(BaseModel, HomeImageProcessingMixin):
+    project = models.ForeignKey(
+        'Project', 
+        related_name='project_images', 
+        on_delete=models.CASCADE
+    )
+    image = models.ImageField(upload_to="projects/gallery/")
+
+    class Meta:
+        db_table = "project_images"
+        verbose_name = "Project Image"
+        verbose_name_plural = "Project Gallery"
+
+    def __str__(self):
+        return f"Image for {self.project.name}"
+    
 
 
         
@@ -136,7 +148,6 @@ class Stage(BaseModel):
     class Meta:
         db_table = "stages"
         ordering = ['project', 'stage_no']
-        # Ensures Project A cannot have two "Stage 1" entries
         constraints = [
             models.UniqueConstraint(fields=['project', 'stage_no'], name='unique_stage_per_project')
         ]
@@ -145,6 +156,26 @@ class Stage(BaseModel):
 
     def __str__(self):
         return f"{self.project.name} - Stage {self.stage_no}: {self.heading}"
+
+
+
+
+class StageImage(BaseModel, HomeImageProcessingMixin):
+    # Link to the specific Stage
+    stage = models.ForeignKey(
+        'Stage', 
+        related_name='stage_images', 
+        on_delete=models.CASCADE
+    )
+    image = models.ImageField(upload_to="projects/stages/gallery/")
+
+    class Meta:
+        db_table = "stage_images"
+        verbose_name = "Stage Image"
+        verbose_name_plural = "Stage Gallery"
+
+    def __str__(self):
+        return f"Gallery Image for {self.stage.heading}"
 
 
         

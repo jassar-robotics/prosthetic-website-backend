@@ -9,33 +9,33 @@ from projects.models import Project
 from projects.serializer import (ProjectSerializer)
 
 
-class ProjectViewSet(ModelViewSet):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
-    permission_classes = [IsAuthenticated]
+# class ProjectViewSet(ModelViewSet):
+#     queryset = Project.objects.all()
+#     serializer_class = ProjectSerializer
+#     permission_classes = [IsAuthenticated]
 
-    def perform_update(self, serializer):
-        serializer.save(modified_at=timezone.now())
+#     def perform_update(self, serializer):
+#         serializer.save(modified_at=timezone.now())
 
-    def create(self, request, *args, **kwargs):
-        response = super().create(request, *args, **kwargs)
-        return Response(
-            {"message": "Project created successfully!", "data": response.data},
-            status=status.HTTP_201_CREATED,
-        )
+#     def create(self, request, *args, **kwargs):
+#         response = super().create(request, *args, **kwargs)
+#         return Response(
+#             {"message": "Project created successfully!", "data": response.data},
+#             status=status.HTTP_201_CREATED,
+#         )
 
-    def update(self, request, *args, **kwargs):
-        response = super().update(request, *args, **kwargs)
-        return Response(
-            {"message": "Project updated successfully!", "data": response.data},
-            status=status.HTTP_200_OK,
-        )
+#     def update(self, request, *args, **kwargs):
+#         response = super().update(request, *args, **kwargs)
+#         return Response(
+#             {"message": "Project updated successfully!", "data": response.data},
+#             status=status.HTTP_200_OK,
+#         )
 
-    def destroy(self, request, *args, **kwargs):
-        super().destroy(request, *args, **kwargs)
-        return Response(
-            {"message": "Project deleted successfully!"}, status=status.HTTP_204_NO_CONTENT
-        )
+#     def destroy(self, request, *args, **kwargs):
+#         super().destroy(request, *args, **kwargs)
+#         return Response(
+#             {"message": "Project deleted successfully!"}, status=status.HTTP_204_NO_CONTENT
+#         )
 
 class ProjectDetailView(AllowAnyAPIView):
     def get(self, _, project_slug):
